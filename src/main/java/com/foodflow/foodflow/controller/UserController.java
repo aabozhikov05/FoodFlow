@@ -21,4 +21,8 @@ public class UserController {
     public UserResponse registerUser(@Valid @RequestBody UserRegistrationRequest request) {
         return userService.registerUser(request);
     }
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
 }
