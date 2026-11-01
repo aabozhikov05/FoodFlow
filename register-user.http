@@ -1,3 +1,14 @@
-### Get non-existing user
-GET http://localhost:8080/api/users/999999
+### Update user
+PUT http://localhost:8080/api/users/1
+Content-Type: application/json
+
+{
+  "firstName": "Aleksandar",
+  "lastName": "Updated",
+  "email": "aleksandar.updated@test.com"
+}
+### Verify updated user
+GET http://localhost:8080/api/users/1
 Accept: application/json
+### Delete user
+DELETE http://localhost:8080/api/users/1
