@@ -1,22 +1,24 @@
 package com.foodflow.foodflow.service;
 
+import com.foodflow.foodflow.dto.*;
 import com.foodflow.foodflow.entity.User;
 import com.foodflow.foodflow.repository.UserRepository;
+import com.foodflow.foodflow.security.JwtService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import com.foodflow.foodflow.dto.UserRegistrationRequest;
-import com.foodflow.foodflow.dto.UserResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import com.foodflow.foodflow.dto.UserUpdateRequest;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
     public User createUser(User user){
@@ -104,6 +106,28 @@ public class UserService {
                 ));
 
         userRepository.delete(user);
+    }
+    public AuthResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Invalid email or password"));
+
+        boolean passwordMatches = passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword()
+        );
+
+        if (!passwordMatches) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid email or password");
+        }
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new AuthResponse(token);
     }
 }
 

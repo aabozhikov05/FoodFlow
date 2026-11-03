@@ -12,3 +12,32 @@ GET http://localhost:8080/api/users/1
 Accept: application/json
 ### Delete user
 DELETE http://localhost:8080/api/users/1
+### Register test user
+POST http://localhost:8080/api/users/register
+Content-Type: application/json
+
+{
+  "firstName": "Test",
+  "lastName": "User",
+  "email": "a@test.com",
+  "password": "TestPassword1234"
+}
+### Login
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "a@test.com",
+  "password": "TestPassword1234"
+}
+### Login with wrong password
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "login@test.com",
+  "password": "WrongPassword123"
+}
+### Get user by ID with JWT
+GET http://localhost:8080/api/users/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQHRlc3QuY29tIiwiaWF0IjoxNzkzNzExNzg4LCJleHAiOjE3OTM3OTgxODh9.BLSWqZMvehmST3cpW5A-1ttiObsRJJ5A79CU8ao71nE

@@ -1,14 +1,13 @@
 package com.foodflow.foodflow.controller;
 
-import com.foodflow.foodflow.dto.UserRegistrationRequest;
-import com.foodflow.foodflow.dto.UserResponse;
-import com.foodflow.foodflow.dto.UserUpdateRequest;
+import com.foodflow.foodflow.dto.*;
 import com.foodflow.foodflow.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -46,5 +45,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        AuthResponse response = userService.login(request);
+
+        return ResponseEntity.ok(response);
     }
 }
